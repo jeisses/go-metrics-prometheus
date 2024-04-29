@@ -69,7 +69,7 @@ func TestPrometheusCounterGetUpdated(t *testing.T) {
 	time.Sleep(5 * time.Second)
 	metrics, _ := prometheusRegistry.Gather()
 	serialized := fmt.Sprint(metrics[0])
-	expected := fmt.Sprintf("name:\"test_subsys_counter\" help:\"counter\" type:GAUGE metric:<gauge:<value:%d > > ", cntr.Count())
+	expected := fmt.Sprintf("name:\"test_subsys_counter\" help:\"counter\" type:GAUGE metric:{gauge:{value:%d}}", cntr.Count())
 	if serialized != expected {
 		t.Fatalf("Go-metrics value and prometheus metrics value do not match")
 	}
@@ -90,7 +90,7 @@ func TestPrometheusGaugeGetUpdated(t *testing.T) {
 		t.Fatalf("prometheus was unable to register the metric")
 	}
 	serialized := fmt.Sprint(metrics[0])
-	expected := fmt.Sprintf("name:\"test_subsys_gauge\" help:\"gauge\" type:GAUGE metric:<gauge:<value:%d > > ", gm.Value())
+	expected := fmt.Sprintf("name:\"test_subsys_gauge\" help:\"gauge\" type:GAUGE metric:{gauge:{value:%d}}", gm.Value())
 	if serialized != expected {
 		t.Fatalf("Go-metrics value and prometheus metrics value do not match")
 	}
@@ -118,7 +118,7 @@ func TestPrometheusMeterGetUpdated(t *testing.T) {
 	}
 
 	expected := fmt.Sprintf(
-		"name:\"test_subsys_meter\" help:\"meter\" type:GAUGE metric:<label:<name:\"type\" value:\"count\" > gauge:<value:%v > > metric:<label:<name:\"type\" value:\"rate1\" > gauge:<value:%v > > metric:<label:<name:\"type\" value:\"rate15\" > gauge:<value:%v > > metric:<label:<name:\"type\" value:\"rate5\" > gauge:<value:%v > > metric:<label:<name:\"type\" value:\"rate_mean\" > gauge:<value:%v > > ",
+		"name:\"test_subsys_meter\" help:\"meter\" type:GAUGE metric:{label:{name:\"type\" value:\"count\"} gauge:{value:%v}} metric:{label:{name:\"type\" value:\"rate1\"} gauge:{value:%v}} metric:{label:{name:\"type\" value:\"rate15\"} gauge:{value:%v}} metric:{label:{name:\"type\" value:\"rate5\"} gauge:{value:%v}} metric:{label:{name:\"type\" value:\"rate_mean\"} gauge:{value:%v}}",
 		snap.Count(), snap.Rate1(), snap.Rate15(), snap.Rate5(), snap.RateMean(),
 	)
 
@@ -152,7 +152,7 @@ func TestPrometheusHistogramGetUpdated(t *testing.T) {
 	assert.Equal(
 		t,
 		fmt.Sprintf(
-			"name:\"test_subsys_metric\" help:\"metric\" type:GAUGE metric:<label:<name:\"type\" value:\"count\" > gauge:<value:%v > > metric:<label:<name:\"type\" value:\"max\" > gauge:<value:%v > > metric:<label:<name:\"type\" value:\"mean\" > gauge:<value:%v > > metric:<label:<name:\"type\" value:\"min\" > gauge:<value:%v > > metric:<label:<name:\"type\" value:\"perc75\" > gauge:<value:%v > > metric:<label:<name:\"type\" value:\"perc95\" > gauge:<value:%v > > metric:<label:<name:\"type\" value:\"perc99\" > gauge:<value:%v > > metric:<label:<name:\"type\" value:\"perc999\" > gauge:<value:%v > > metric:<label:<name:\"type\" value:\"stddev\" > gauge:<value:%v > > metric:<label:<name:\"type\" value:\"sum\" > gauge:<value:%v > > metric:<label:<name:\"type\" value:\"variance\" > gauge:<value:%v > > ",
+			"name:\"test_subsys_metric\" help:\"metric\" type:GAUGE metric:{label:{name:\"type\" value:\"count\"} gauge:{value:%v}} metric:{label:{name:\"type\" value:\"max\"} gauge:{value:%v}} metric:{label:{name:\"type\" value:\"mean\"} gauge:{value:%v}} metric:{label:{name:\"type\" value:\"min\"} gauge:{value:%v}} metric:{label:{name:\"type\" value:\"perc75\"} gauge:{value:%v}} metric:{label:{name:\"type\" value:\"perc95\"} gauge:{value:%v}} metric:{label:{name:\"type\" value:\"perc99\"} gauge:{value:%v}} metric:{label:{name:\"type\" value:\"perc999\"} gauge:{value:%v}} metric:{label:{name:\"type\" value:\"stddev\"} gauge:{value:%v}} metric:{label:{name:\"type\" value:\"sum\"} gauge:{value:%v}} metric:{label:{name:\"type\" value:\"variance\"} gauge:{value:%v}}",
 			gm.Count(),
 			gm.Max(),
 			gm.Mean(),
